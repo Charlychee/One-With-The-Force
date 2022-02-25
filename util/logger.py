@@ -27,15 +27,11 @@ class Logger:
             self.log.close()
 
     def log_data(self, time, value_type, value):
-        print("Logging")
         log_str = str(time) + "," + value_type + "," + str(value) + "\n"
-        print(log_str)
         if self.local:
-            print("Local")
             self.log.write(log_str)
             self.log.flush()
         if self.network:
-            print("Network")
             self.sock.sendall(log_str.encode())
 
     def log_string(self, string: str):

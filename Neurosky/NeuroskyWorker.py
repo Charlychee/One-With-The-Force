@@ -5,7 +5,9 @@ from util.logger import Logger
 
 
 class NeuroskyWorker(QObject):
-    opacity_signal = pyqtSignal(float)
+    attention_signal = pyqtSignal(int)
+    meditation_signal = pyqtSignal(int)
+
     finished = pyqtSignal()
     attention = 0
     meditation = 0
@@ -20,29 +22,21 @@ class NeuroskyWorker(QObject):
         self.neuropy.setCallBack("meditation", self.meditation_callback)
         self.neuropy.start()
         print("Neuropy Started")
-        try:
-            while True:
-                sleep(0.2)
-        finally:
-            self.neuropy.stop()
 
-        self.finished.emit()
+    def __del__(self):
+        self.neuropy.stop()
 
     def attention_callback(self, attention_value, time_taken):
         """this function will be called everytime NeuroPy has a new value for attention"""
         self.log_writer.log_data(time_taken, "attention", attention_value)
         self.attention = attention_value
         print("Value of attention is: ", attention_value)
-        self.send_opacity()
+        self.attention_signal.emit(attention_value)
 
     def meditation_callback(self, meditation_value, time_taken):
         """this function will be called everytime NeuroPy has a new value for attention"""
         self.log_writer.log_data(time_taken, "meditation", meditation_value)
         self.meditation = meditation_value
         print("Value of meditation is: ", meditation_value)
-        self.send_opacity()
-
-    def send_opacity(self):
-        # TODO: Make proper algorithm for choosing an opacity
-        self.opacity_signal.emit(self.attention / 100)
+        self.meditation_signal.emit(meditation_value)
 
