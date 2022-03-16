@@ -20,7 +20,7 @@ class Logger:
             except:
                 print("Couldn't connect to data server")
 
-        #Log Header
+        # Log Header
         self.log_string('time,type,value')
 
     def __del__(self):
