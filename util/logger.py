@@ -20,6 +20,9 @@ class Logger:
             except:
                 print("Couldn't connect to data server")
 
+        #Log Header
+        self.log_string('time,type,value')
+
     def __del__(self):
         if self.network:
             self.sock.close()
